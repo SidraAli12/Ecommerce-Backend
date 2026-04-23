@@ -1,16 +1,20 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+//const protect = require('./middleware/authMiddleware');
 
-dotenv.config(); // ✅ sabse pehle
+dotenv.config();
 
 const app = express();
 
 const connectDB = require('./config/db');
-connectDB(); // ✅ ab env load ho chuki hai
-
+connectDB(); 
 const userroutes = require('./routes/userroutes');
+const protect = require('./middleware/authMiddleware');
 
+app.get('/api/protected', protect, (req, res) => {
+  res.json({ message: "You are authorized", user: req.user });
+});
 // middleware
 app.use(express.json());
 app.use(cors());
