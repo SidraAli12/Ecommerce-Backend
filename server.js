@@ -10,14 +10,17 @@ const connectDB = require('./config/db');
 connectDB(); 
 const userroutes = require('./routes/userroutes');
 const protect = require('./middleware/authMiddleware');
+const cartRoutes = require('./routes/cartRoutes');
+// middleware
+app.use(express.json());
+app.use(cors());
 
+app.use('/api/cart', cartRoutes);
 
 app.get('/api/protected', protect, (req, res) => {
   res.json({ message: "You are authorized", user: req.user });
 });
-// middleware
-app.use(express.json());
-app.use(cors());
+
 app.use('/api/products', productRoutes);
 // routes
 app.use('/api/users', userroutes);
