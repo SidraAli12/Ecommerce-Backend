@@ -6,11 +6,14 @@ const protect = require('../middleware/authMiddleware');
 const {
   addToCart,
   getCart,
-  removeFromCart
+  removeFromCart,
+  updateFromCart
 } = require('../controllers/cartController');
 
 router.post('/', protect, addToCart);
 router.get('/', protect, getCart);
 router.delete('/', protect, removeFromCart);
+router.put('/', protect, updateFromCart);
+
 
 module.exports = router;

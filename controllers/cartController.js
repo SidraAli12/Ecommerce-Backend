@@ -3,6 +3,12 @@ const Cart = require('../models/Cart');
 // ADD TO CART
 exports.addToCart = async (req, res) => {
   const { productId, quantity } = req.body;
+  const qty = Number(quantity);
+  if (!qty || qty < 1) {
+  return res.status(400).json({
+    message: "Invalid quantity"
+  });
+}
 
   try {
     let cart = await Cart.findOne({ user: req.user });
@@ -53,6 +59,34 @@ exports.removeFromCart = async (req, res) => {
     cart.products = cart.products.filter(
       p => p.product.toString() !== productId
     );
+
+    await cart.save();
+
+    res.json(cart);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.updateFromCart = async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  try {
+    let cart = await Cart.findOne({ user: req.user });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    const productIndex = cart.products.findIndex(
+      p => p.product.toString() === productId
+    );
+
+    if (productIndex === -1) {
+      return res.status(404).json({ message: "Product not in cart" });
+    }
+
+    cart.products[productIndex].quantity = quantity;
 
     await cart.save();
 

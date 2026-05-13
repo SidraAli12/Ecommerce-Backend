@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 //const protect = require('./middleware/authMiddleware');
 const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+
 dotenv.config();
 const app = express();
 
@@ -14,6 +16,8 @@ const cartRoutes = require('./routes/cartRoutes');
 // middleware
 app.use(express.json());
 app.use(cors());
+app.use('/api/orders', orderRoutes);
+
 
 app.use('/api/cart', cartRoutes);
 

@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 const protect = (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     try {
       token = req.headers.authorization.split(" ")[1];
 
@@ -11,15 +14,17 @@ const protect = (req, res, next) => {
 
       req.user = decoded.id;
 
-      next();
+      return next(); // ✅ IMPORTANT
     } catch (error) {
-      res.status(401).json({ message: "Not authorized" });
+      return res.status(401).json({
+        message: "Not authorized"
+      });
     }
   }
 
-  if (!token) {
-    res.status(401).json({ message: "No token" });
-  }
+  return res.status(401).json({
+    message: "No token"
+  });
 };
 
 module.exports = protect;
