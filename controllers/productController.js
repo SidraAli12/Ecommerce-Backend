@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 
-// ADD PRODUCT
+
 exports.addProduct = async (req, res) => {
   try {
     const { name, price, description, image, category } = req.body;
@@ -19,7 +19,7 @@ exports.addProduct = async (req, res) => {
   }
 };
 
-// GET ALL PRODUCTS
+
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -29,7 +29,6 @@ exports.getProducts = async (req, res) => {
   }
 };
 
-// GET SINGLE PRODUCT
 exports.getSingleProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -41,5 +40,27 @@ exports.getSingleProduct = async (req, res) => {
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found"
+      });
+    }
+
+    await product.deleteOne();
+
+    res.json({
+      message: "Product deleted"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
   }
 };
