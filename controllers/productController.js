@@ -64,3 +64,32 @@ exports.deleteProduct = async (req, res) => {
     });
   }
 };
+
+exports.updateProduct = async (req, res) => {
+  try {
+    const { name, price, description, image, category } = req.body;
+
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found"
+      });
+    }
+
+    product.name = name || product.name;
+    product.price = price || product.price;
+    product.description = description || product.description;
+    product.image = image || product.image;
+    product.category = category || product.category;
+
+    await product.save();
+
+    res.json(product);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+};
