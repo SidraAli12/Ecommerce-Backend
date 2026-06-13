@@ -46,3 +46,48 @@ exports.getMyOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// GET ALL ORDERS (ADMIN)
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('user', 'name email');
+
+    res.json(orders);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+};
+
+
+// MARK ORDER DELIVERED
+exports.markOrderDelivered = async (req, res) => {
+  try {
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found"
+      });
+    }
+
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    await order.save();
+
+    res.json({
+      message: "Order delivered",
+      order
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+};

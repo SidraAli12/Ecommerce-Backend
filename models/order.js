@@ -19,10 +19,21 @@ const orderSchema = new mongoose.Schema({
       }
     }
   ],
+  
   totalPrice: {
     type: Number,
     required: true
-  }
-}, { timestamps: true });
+  },
+  isDelivered: {
+  type: Boolean,
+  default: false
+},
+
+deliveredAt: {
+  type: Date
+},
+}, { timestamps: true }
+);
+
 
 module.exports = mongoose.model('Order', orderSchema);
